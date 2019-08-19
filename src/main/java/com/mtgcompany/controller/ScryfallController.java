@@ -35,12 +35,12 @@ public class ScryfallController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            path = "/{cardName}/price")
+            path = "/card/{cardName}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ScryfallResponse> getPrice(@PathVariable("cardName") String cardName) {
+    public ResponseEntity<ScryfallResponse> getCard(@PathVariable("cardName") String cardName) {
         LOGGER.info("Getting Card Name: {}", cardName);
         ScryfallResponse response = scryfallClient.getPrice(cardName);
-        LOGGER.info("Current Price: ${}", response.getUsd());
+        LOGGER.info("Current Prices: {}", response.getPrice());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

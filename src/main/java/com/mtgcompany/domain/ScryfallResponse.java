@@ -4,10 +4,10 @@ public class ScryfallResponse {
 
     private String object;
     private String id;
-    private String usd;
+    private Price prices;
 
     public String getObject() {
-        return object;
+        return this.object;
     }
 
     public void setObject(String object) {
@@ -15,18 +15,18 @@ public class ScryfallResponse {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getUsd() {
-        return usd;
+    public Price getPrice() {
+        return this.prices;
     }
 
-    public void setUsd(String usd) {
-        this.usd = usd;
+    public void setPrice(Price price) {
+        this.prices = price;
     }
 }
