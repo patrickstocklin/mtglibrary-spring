@@ -1,5 +1,6 @@
 package com.mtgcompany.controller;
 
+import com.mtgcompany.client.ElasticsearchClient;
 import com.mtgcompany.client.ScryfallClient;
 import com.mtgcompany.domain.ScryfallResponse;
 import org.slf4j.Logger;
@@ -18,19 +19,14 @@ public class ScryfallController {
     @Autowired
     private ScryfallClient scryfallClient;
 
+    @Autowired
+    private ElasticsearchClient elasticsearchClient;
+
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Magic Time");
-    }
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/pong")
-    public String pong() {
-        LOGGER.info("Received Signal from Webapp");
-        return "pong";
     }
 
     @RequestMapping(
@@ -43,4 +39,17 @@ public class ScryfallController {
         LOGGER.info("Current Prices: {}", response.getPrice());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            path = "/card/{cardName}/add")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ScryfallResponse> addCard(@PathVariable("cardName") String cardName) {
+        LOGGER.info("Adding Card Name: {}", cardName);
+        ScryfallResponse response = scryfallClient.getPrice(cardName);
+        elasticsearchClient.addCard(response);
+        LOGGER.info("Added {}", cardName);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

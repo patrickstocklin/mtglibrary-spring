@@ -4,6 +4,7 @@ public class ScryfallResponse {
 
     private String object;
     private String id;
+    private String name;
     private Price prices;
     private ImageUri image_uris;
 
@@ -21,6 +22,14 @@ public class ScryfallResponse {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Price getPrice() {
