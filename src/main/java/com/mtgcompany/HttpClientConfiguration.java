@@ -16,7 +16,7 @@ public class HttpClientConfiguration {
 
     private final String SCRYFALL_ADDRESS = "https://api.scryfall.com";
 
-    private final String ELASTICSEARCH_ADDRESS = "http://127.0.0.1:9200";
+    private final String ELASTICSEARCH_ADDRESS = "http://elasticsearch:9200";
 
     @Bean
     public ScryfallClient scryfallClient() {
