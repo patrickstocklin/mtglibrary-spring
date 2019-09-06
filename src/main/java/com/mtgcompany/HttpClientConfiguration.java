@@ -2,6 +2,7 @@ package com.mtgcompany;
 
 import com.mtgcompany.client.ElasticsearchClient;
 import com.mtgcompany.client.ScryfallClient;
+import com.mtgcompany.error.ElasticsearchErrorDecoder;
 import feign.Feign;
 import feign.Logger;
 import feign.gson.GsonDecoder;
@@ -36,6 +37,7 @@ public class HttpClientConfiguration {
                 .client(new OkHttpClient())
                 .encoder(new GsonEncoder())
                 .decoder(new GsonDecoder())
+                .errorDecoder(new ElasticsearchErrorDecoder())
                 .logger(new Slf4jLogger(ElasticsearchClient.class))
                 .logLevel(Logger.Level.FULL)
                 .target(ElasticsearchClient.class, ELASTICSEARCH_ADDRESS);
