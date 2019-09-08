@@ -3,6 +3,7 @@ package com.mtgcompany.controller;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mtgcompany.client.ElasticsearchClient;
 import com.mtgcompany.client.ScryfallClient;
+import com.mtgcompany.domain.CollectionsResponse;
 import com.mtgcompany.domain.ScryfallResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*") //TODO change me!
+//TODO break this up
 public class ScryfallController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScryfallController.class);
@@ -87,13 +89,15 @@ public class ScryfallController {
             method = RequestMethod.GET,
             path = "/collection/all")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> getCollections() {
+    public ResponseEntity<CollectionsResponse> getCollections() {
         LOGGER.info("Getting a List of all Collections");
         LinkedTreeMap<String, LinkedTreeMap> mapOfIndices = elasticsearchClient.getIndices();
         LOGGER.info("Retrieved Collections Map {}", mapOfIndices.toString());
 
         List<String> collections = new ArrayList<>(mapOfIndices.keySet());
-        return new ResponseEntity<>(collections, HttpStatus.OK);
+        CollectionsResponse response = new CollectionsResponse();
+        response.setCollections(collections);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
