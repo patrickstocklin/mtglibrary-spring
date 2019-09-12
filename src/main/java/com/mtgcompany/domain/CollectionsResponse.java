@@ -4,13 +4,13 @@ import java.util.List;
 
 public class CollectionsResponse {
 
-    private List<String> collections;
+    private List<CollectionIndex> collections;
 
-    public List<String> getCollections() {
+    public List<CollectionIndex> getCollections() {
         return collections;
     }
 
-    public void setCollections(List<String> collections) {
+    public void setCollections( List<CollectionIndex> collections) {
         this.collections = collections;
     }
 }

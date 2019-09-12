@@ -3,8 +3,10 @@ package com.mtgcompany.controller;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mtgcompany.client.ElasticsearchClient;
 import com.mtgcompany.client.ScryfallClient;
+import com.mtgcompany.domain.CollectionIndex;
 import com.mtgcompany.domain.CollectionsResponse;
 import com.mtgcompany.domain.ScryfallResponse;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -72,15 +72,15 @@ public class ScryfallController {
             LOGGER.info("Retrieved Collections Map {}", mapOfIndices.toString());
 
             if (mapOfIndices.containsKey(collectionName)) {
-                LOGGER.info("Collection {} exists in Elasticsearch", mapOfIndices.get(collectionName));
+                LOGGER.info("CollectionIndex {} exists in Elasticsearch", mapOfIndices.get(collectionName));
                 return new ResponseEntity<>(collectionName, HttpStatus.OK);
             } else {
-                LOGGER.info("Collection does not exist under name {}", collectionName);
+                LOGGER.info("CollectionIndex does not exist under name {}", collectionName);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         //TO DO: Specify different Exceptions w/ Decoder
         } catch (Exception e) {
-            LOGGER.info("Collection does not exist under name {}", collectionName);
+            LOGGER.info("CollectionIndex does not exist under name {}", collectionName);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -94,7 +94,11 @@ public class ScryfallController {
         LinkedTreeMap<String, LinkedTreeMap> mapOfIndices = elasticsearchClient.getIndices();
         LOGGER.info("Retrieved Collections Map {}", mapOfIndices.toString());
 
-        List<String> collections = new ArrayList<>(mapOfIndices.keySet());
+        List<CollectionIndex> collections = new ArrayList<>();
+        mapOfIndices.keySet().forEach(index -> collections.add(new CollectionIndex(index)));
+
+        LOGGER.info(collections.toString());
+
         CollectionsResponse response = new CollectionsResponse();
         response.setCollections(collections);
         return new ResponseEntity<>(response, HttpStatus.OK);
