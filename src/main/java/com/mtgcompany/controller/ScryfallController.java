@@ -3,10 +3,7 @@ package com.mtgcompany.controller;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mtgcompany.client.ElasticsearchClient;
 import com.mtgcompany.client.ScryfallClient;
-import com.mtgcompany.domain.CollectionIndex;
-import com.mtgcompany.domain.CollectionsResponse;
-import com.mtgcompany.domain.ScryfallResponse;
-import javafx.util.Pair;
+import com.mtgcompany.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*") //TODO change me!
-//TODO break this up
+//TODO break this up and really refactor these pojos i mean seriously it is getting out of control
 public class ScryfallController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScryfallController.class);
@@ -82,6 +79,32 @@ public class ScryfallController {
         } catch (Exception e) {
             LOGGER.info("CollectionIndex does not exist under name {}", collectionName);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            path = "/collection/{collectionName}/card/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CardsResponse> getCollection(@PathVariable("collectionName") String collectionName) {
+        LOGGER.info("Getting Elasticsearch Name: {}", collectionName);
+
+        try {
+            ElasticsearchSearchResponse cards = elasticsearchClient.getCardsFromIndex(collectionName);
+            LOGGER.info("Retrieved Collections Map {}", cards.toString());
+
+            CardsResponse response = new CardsResponse();
+            List<Card> cardList = new ArrayList<>();
+            cards.getHits().getHits().forEach(hit -> cardList.add(hit.get_source()));
+            response.setCards(cardList);
+
+
+            LOGGER.info(response.toString());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            //TO DO: Specify different Exceptions w/ Decoder
+        } catch (Exception e) {
+            LOGGER.info("CollectionIndex does not exist under name {}", collectionName);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

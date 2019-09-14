@@ -19,6 +19,7 @@ public class HttpClientConfiguration {
 
     private final String ELASTICSEARCH_ADDRESS = "http://elasticsearch:9200";
 
+
     @Bean
     public ScryfallClient scryfallClient() {
         ScryfallClient client = Feign.builder()
